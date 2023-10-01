@@ -1,0 +1,104 @@
+plugins {
+    id "java-library"
+    id "org.embulk.embulk-plugins" version "0.5.5"
+    id "maven-publish"
+    id "signing"
+}
+
+group = "io.github.hishidama.embulk"
+version = "0.1.0"
+description = "Hadoop SequenceFile parser plugin for Embulk"
+
+sourceCompatibility = 8
+targetCompatibility = 8
+compileJava.options.encoding = 'UTF-8'
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+javadoc {
+    options.charSet = 'UTF-8'
+    options.encoding = 'UTF-8'
+}
+
+repositories {
+    mavenCentral()
+    maven { url 'https://asakusafw.s3.amazonaws.com/maven/releases' }
+}
+
+embulkPlugin {
+    mainClass = "org.embulk.parser.seqfile.SequenceFileParserPlugin"
+    category = "parser"
+    type = "hadoop_seqfile"
+}
+
+dependencies {
+    compileOnly "org.embulk:embulk-api:0.10.43"
+    compileOnly "org.embulk:embulk-spi:0.11"
+    compile "org.embulk:embulk-util-config:0.3.4"
+    compile "org.embulk:embulk-util-file:0.1.5"
+    compile "org.embulk:embulk-util-timestamp:0.2.2"
+
+//  compile "org.apache.hadoop:hadoop-common:2.7.3"
+//  compile "org.apache.hadoop:hadoop-common:2.10.2"
+    compile "org.apache.hadoop:hadoop-common:3.3.6"
+    compile "com.asakusafw:asakusa-runtime:0.10.0"
+
+    // compile "YOUR_JAR_DEPENDENCY_GROUP:YOUR_JAR_DEPENDENCY_MODULE:YOUR_JAR_DEPENDENCY_VERSION"
+
+    testCompile "org.embulk:embulk-deps:0.11.0"
+    testCompile "org.embulk:embulk-junit4:0.11.0"
+    testCompile "io.github.hishidama.embulk:hm-embulk-tester:0.1.+"
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'embulk-parser-hadoop-seqfile'
+            from components.java
+
+            pom {
+                name = 'Hadoop SequenceFile parser plugin for Embulk'
+                description = 'Parses Hadoop SequenceFile read by other file input plugins.'
+                url = 'https://github.com/hishidama/embulk-parser-hadoop-seqfile'
+                licenses {
+                    license {
+                        name = 'MIT License'
+                        url = 'http://www.opensource.org/licenses/mit-license.php'
+                    }
+                }
+                developers {
+                    developer {
+                        id = 'hishidama'
+                    }
+                }
+                scm {
+                    connection = 'git@github.com:hishidama/embulk-parser-hadoop-seqfile.git'
+                    developerConnection = 'git@github.com:hishidama/embulk-parser-hadoop-seqfile.git'
+                    url = 'https://github.com/hishidama/embulk-parser-hadoop-seqfile'
+                }
+                withXml {
+                    def repositoriesNode = asNode().appendNode('repositories')
+                    def repositoryNode = repositoriesNode.appendNode('repository')
+                    repositoryNode.appendNode('id', 'asakusafw')
+                    repositoryNode.appendNode('url', 'https://asakusafw.s3.amazonaws.com/maven/releases')
+                }
+            }
+        }
+    }
+    repositories {
+        maven {
+            url = "https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/"
+            credentials {
+                username findProperty('sonatypeUsername')
+                password findProperty('sonatypePassword')
+            }
+        }
+    }
+}
+
+signing {
+    sign publishing.publications.mavenJava
+}
