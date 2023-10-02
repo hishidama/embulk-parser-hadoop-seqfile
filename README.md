@@ -39,6 +39,8 @@ in:
     - {name: count, type: long, wtype: intOption}
 ```
 
+See [asakusafw-helper.xlsx](asakusafw-helper.xlsx) as a tool to assist in generating columns from dmdl.
+
 
 ## Configuration
 
