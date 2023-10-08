@@ -90,23 +90,12 @@ See [asakusafw-helper.xlsx](asakusafw-helper.xlsx) as a tool to assist in genera
 
 ## Install
 
-1. download pom
+1. install plugin
    ```
-   $ curl https://repo1.maven.org/maven2/io/github/hishidama/embulk/embulk-parser-hadoop-seqfile/0.1.0/embulk-parser-hadoop-seqfile-0.1.0.pom > embulk-parser-hadoop-seqfile-0.1.0.pom
-   ```
-
-2. install dependencies
-   ```
-   $ mvn install -f embulk-parser-hadoop-seqfile-0.1.0.pom
+   $ mvn dependency:get -Dartifact=io.github.hishidama.embulk:embulk-parser-hadoop-seqfile:0.1.0
    ```
 
-3. download and install jar
-   ```
-   $ export M2_REPO=$HOME/.m2/repository
-   $ curl https://repo1.maven.org/maven2/io/github/hishidama/embulk/embulk-parser-hadoop-seqfile/0.1.0/embulk-parser-hadoop-seqfile-0.1.0.jar > $M2_REPO/io/github/hishidama/embulk/embulk-parser-hadoop-seqfile/0.1.0/embulk-parser-hadoop-seqfile-0.1.0.jar
-   ```
-
-4. add setting to $HOME/.embulk/embulk.properties
+2. add setting to $HOME/.embulk/embulk.properties
    ```
    plugins.parser.hadoop_seqfile=maven:io.github.hishidama.embulk:hadoop-seqfile:0.1.0
    ```
